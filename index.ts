@@ -1,10 +1,21 @@
 let canvas = <HTMLCanvasElement>document.createElement('canvas');
 let ctx = canvas.getContext("2d")!;
-let grises = document.getElementById("grises")! as HTMLButtonElement;
-canvas.width = 150;
-canvas.height = 150;
+canvas.width = 400;
+canvas.height = 400;
 canvas.style.border = "2px solid blue";
 document.body.appendChild(canvas);
+
+let canvas2 = <HTMLCanvasElement>document.createElement('canvas');
+let ctx2 = canvas2.getContext("2d")!;
+canvas2.style.marginLeft = '20px'
+canvas2.width = 400;
+canvas2.height = 400;
+canvas2.style.border = "2px solid blue";
+document.body.appendChild(canvas2);
+
+let grises = document.getElementById("grises")! as HTMLButtonElement;
+let limp = document.getElementById("limpiar")! as HTMLButtonElement;
+let inv= document.getElementById("inv")! as HTMLButtonElement;
 
 function previewFile() {
       let img = new Image()
@@ -12,15 +23,15 @@ function previewFile() {
       let fi = file?.files![0];
       const reader = new FileReader();
       reader.addEventListener("load", function () {
-            //preview?.setAttribute("src",reader.result as string)
             img.src = reader.result as string;
             img.onload = () => {
                   ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-                  //console.log(typeof img)
-                  grises.addEventListener("click",function gray(){
-                        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                  grises.addEventListener("click", function gray() {
                         gris(img)
                   })
+                  limp.addEventListener("click", limpiar)
+                  inv.addEventListener("click",function (){invertir(img)})
+
             }
       }, false);
 
@@ -28,15 +39,9 @@ function previewFile() {
             reader.readAsDataURL(fi);
       }
 }
-function gris(img:any) {      
-      let canvas1 = <HTMLCanvasElement>document.createElement('canvas');
-      let ctx1 = canvas1.getContext("2d")!;      
-      canvas1.width = 150;
-      canvas1.height = 150;
-      canvas1.style.border = "2px solid blue";
-      document.body.appendChild(canvas1);
-      ctx1.drawImage(img, 0, 0, canvas1.width, canvas1.height)
-      var imageData = ctx.getImageData(0, 0, canvas1.width, canvas1.height);
+const gris = (img: any) => {
+      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height)
+      var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
       var pixels = imageData.data
       var numPixels = imageData.width * imageData.height;
       for (var i = 0; i < numPixels; i++) {
@@ -47,7 +52,24 @@ function gris(img:any) {
             pixels[i * 4] = grey;
             pixels[i * 4 + 1] = grey;
             pixels[i * 4 + 2] = grey;
-
       }
-      ctx1.putImageData(imageData, 0, 0);      
+      ctx2.putImageData(imageData, 0, 0);
+}
+const invertir = (img:any) => {
+      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
+      var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+      var pixels = imageData.data
+      var numPixels = imageData.width * imageData.height;
+      for(var i=0;i<numPixels;i++){
+            var r = pixels[i * 4],
+            g = pixels[i * 4 + 1],
+            b = pixels[i * 4 + 2];
+            pixels[ i * 4 ] = 255 - r;
+            pixels[ i * 4 + 1 ] = 255 - g;
+            pixels[ i * 4 + 2 ] = 255 - b;            
+      }
+      ctx2.putImageData(imageData, 0, 0);
+}
+const limpiar = () => {
+      ctx2.clearRect(0, 0, canvas2.width, canvas2.height)
 }
