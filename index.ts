@@ -1,4 +1,3 @@
-
 let canvas = <HTMLCanvasElement>document.createElement('canvas');
 let ctx = canvas.getContext("2d")!;
 canvas.width = 400;
@@ -42,7 +41,6 @@ function previewFile() {
       }
 }
 const triColor=(img:any)=>{
-      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height)
       var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
       var pixels = imageData.data
       var numPixels = imageData.width * imageData.height;
@@ -59,18 +57,17 @@ const triColor=(img:any)=>{
             pixels[j * 4 + 2] = grey;
       }
       for (var k = numPixels*2; k < numPixels*3; k++){
-                  pixels[k * 4] = pixels[k * 4];
-                  pixels[k * 4 + 1] = 0;
-                  pixels[k * 4 + 2] = 0;
+            pixels[k * 4] = pixels[k * 4];
+            pixels[k * 4 + 1] = 0;
+            pixels[k * 4 + 2] = 0;
       }          
-      ctx2.putImageData(imageData, 0, 0);
+      dibujarFiltro(img,imageData)
 }
 
 
 
 
-const gris = (img: any) => {
-      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height)
+const gris = (img: any) => {      
       var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
       var pixels = imageData.data
       var numPixels = imageData.width * imageData.height;
@@ -83,10 +80,9 @@ const gris = (img: any) => {
             pixels[i * 4 + 1] = grey;
             pixels[i * 4 + 2] = grey;
       }
-      ctx2.putImageData(imageData, 0, 0);
+      dibujarFiltro(img,imageData)      
 }
-const invertir = (img:any) => {
-      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
+const invertir = (img:any) => {      
       var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
       var pixels = imageData.data
       var numPixels = imageData.width * imageData.height;
@@ -98,14 +94,13 @@ const invertir = (img:any) => {
             pixels[ i * 4 + 1 ] = 255 - g;
             pixels[ i * 4 + 2 ] = 255 - b;            
       }
-      ctx2.putImageData(imageData, 0, 0);
+      dibujarFiltro(img,imageData)      
 }
 const sepia=(img:any)=>{
-      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
       var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
       var pixels = imageData.data
       var numPixels = imageData.width * imageData.height;
-
+      
       for(var i=0;i<numPixels;i++){
             var r = pixels[i * 4],
             g = pixels[i * 4 + 1],
@@ -113,13 +108,17 @@ const sepia=(img:any)=>{
             pixels[ i * 4 ] = 255 - r;
             pixels[ i * 4 + 1 ] = 255 - g;
             pixels[ i * 4 + 2 ] = 255 - b;
-     
+            
             pixels[ i * 4 ] = ( r * .393 ) + ( g *.769 ) + ( b * .189 );
             pixels[ i * 4 + 1 ] = ( r * .349 ) + ( g *.686 ) + ( b * .168 );
             pixels[ i * 4 + 2 ] = ( r * .272 ) + ( g *.534 ) + ( b * .131 );           
       }
-      ctx2.putImageData(imageData, 0, 0);      
+      dibujarFiltro(img,imageData)
 }
 const limpiar = () => {
       ctx2.clearRect(0, 0, canvas2.width, canvas2.height)
+}
+const dibujarFiltro=(img:any,imageData:ImageData)=>{
+      ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
+      ctx2.putImageData(imageData, 0, 0);
 }

@@ -37,7 +37,6 @@ function previewFile() {
     }
 }
 var triColor = function (img) {
-    ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
     var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
     var pixels = imageData.data;
     var numPixels = imageData.width * imageData.height;
@@ -58,10 +57,9 @@ var triColor = function (img) {
         pixels[k * 4 + 1] = 0;
         pixels[k * 4 + 2] = 0;
     }
-    ctx2.putImageData(imageData, 0, 0);
+    dibujarFiltro(img, imageData);
 };
 var gris = function (img) {
-    ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
     var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
     var pixels = imageData.data;
     var numPixels = imageData.width * imageData.height;
@@ -72,10 +70,9 @@ var gris = function (img) {
         pixels[i * 4 + 1] = grey;
         pixels[i * 4 + 2] = grey;
     }
-    ctx2.putImageData(imageData, 0, 0);
+    dibujarFiltro(img, imageData);
 };
 var invertir = function (img) {
-    ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
     var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
     var pixels = imageData.data;
     var numPixels = imageData.width * imageData.height;
@@ -85,10 +82,9 @@ var invertir = function (img) {
         pixels[i * 4 + 1] = 255 - g;
         pixels[i * 4 + 2] = 255 - b;
     }
-    ctx2.putImageData(imageData, 0, 0);
+    dibujarFiltro(img, imageData);
 };
 var sepia = function (img) {
-    ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
     var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
     var pixels = imageData.data;
     var numPixels = imageData.width * imageData.height;
@@ -101,8 +97,12 @@ var sepia = function (img) {
         pixels[i * 4 + 1] = (r * .349) + (g * .686) + (b * .168);
         pixels[i * 4 + 2] = (r * .272) + (g * .534) + (b * .131);
     }
-    ctx2.putImageData(imageData, 0, 0);
+    dibujarFiltro(img, imageData);
 };
 var limpiar = function () {
     ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+};
+var dibujarFiltro = function (img, imageData) {
+    ctx2.drawImage(img, 0, 0, canvas2.width, canvas2.height);
+    ctx2.putImageData(imageData, 0, 0);
 };
