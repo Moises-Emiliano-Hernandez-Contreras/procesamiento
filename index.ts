@@ -18,6 +18,8 @@ let limp = document.getElementById("limpiar")! as HTMLButtonElement;
 let inv= document.getElementById("inv")! as HTMLButtonElement;
 let sep = document.getElementById("sepia")! as HTMLButtonElement;
 let tri = document.getElementById("tri")! as HTMLButtonElement;
+let brillo=document.getElementById("brillo") as HTMLInputElement;
+let cantidad=document.getElementById("cantidad")! as HTMLParagraphElement; 
 
 function previewFile() {
       let img = new Image()
@@ -33,6 +35,11 @@ function previewFile() {
                   inv.addEventListener("click",function (){invertir(img)})                  
                   sep.addEventListener("click",function(){sepia(img)})
                   tri.addEventListener("click",function(){triColor(img)})
+                  brillo.addEventListener("change",function(e:any){                                                
+                        cantidad.textContent="Brillo actual: "+e.currentTarget.value;
+                        let bri=parseFloat(e.currentTarget.value)/2;
+                        chanceBrillo(bri,img);
+                  })
             }
       }, false);
 
@@ -40,6 +47,25 @@ function previewFile() {
             reader.readAsDataURL(fi);
       }
 }
+const chanceBrillo=(bri:number,img:any)=>{
+      var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+      var pixels = imageData.data;
+      var numPixels = imageData.width * imageData.height;
+      var brightnessMul = bri/10;
+      for (var i = 0; i < numPixels; i++){
+            var r = pixels[i * 4],
+                  g = pixels[i * 4 + 1],
+                  b = pixels[i * 4 + 2];
+                  let brightenedRed = brightnessMul * r;
+                  let brightenedGreen = brightnessMul * g;
+                  let brightenedBlue = brightnessMul * b;                              
+            pixels[i * 4] = brightenedRed;
+            pixels[i * 4 + 1] = brightenedGreen;
+            pixels[i * 4 + 2] = brightenedBlue;
+      }
+      dibujarFiltro(img,imageData)      
+}
+
 const triColor=(img:any)=>{
       var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
       var pixels = imageData.data

@@ -16,6 +16,8 @@ var limp = document.getElementById("limpiar");
 var inv = document.getElementById("inv");
 var sep = document.getElementById("sepia");
 var tri = document.getElementById("tri");
+var brillo = document.getElementById("brillo");
+var cantidad = document.getElementById("cantidad");
 function previewFile() {
     var img = new Image();
     var file = document.querySelector('input[type=file]');
@@ -30,12 +32,33 @@ function previewFile() {
             inv.addEventListener("click", function () { invertir(img); });
             sep.addEventListener("click", function () { sepia(img); });
             tri.addEventListener("click", function () { triColor(img); });
+            brillo.addEventListener("change", function (e) {
+                cantidad.textContent = "Brillo actual: " + e.currentTarget.value;
+                var bri = parseFloat(e.currentTarget.value) / 2;
+                chanceBrillo(bri, img);
+            });
         };
     }, false);
     if (fi) {
         reader.readAsDataURL(fi);
     }
 }
+var chanceBrillo = function (bri, img) {
+    var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
+    var pixels = imageData.data;
+    var numPixels = imageData.width * imageData.height;
+    var brightnessMul = bri / 10;
+    for (var i = 0; i < numPixels; i++) {
+        var r = pixels[i * 4], g = pixels[i * 4 + 1], b = pixels[i * 4 + 2];
+        var brightenedRed = brightnessMul * r;
+        var brightenedGreen = brightnessMul * g;
+        var brightenedBlue = brightnessMul * b;
+        pixels[i * 4] = brightenedRed;
+        pixels[i * 4 + 1] = brightenedGreen;
+        pixels[i * 4 + 2] = brightenedBlue;
+    }
+    dibujarFiltro(img, imageData);
+};
 var triColor = function (img) {
     var imageData = ctx.getImageData(0, 0, canvas2.width, canvas2.height);
     var pixels = imageData.data;
